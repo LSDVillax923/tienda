@@ -64,6 +64,30 @@ const articleForm = document.getElementById("article-form");
 const cartStorageKey = "tienda-cart";
 let products = [...initialProducts];
 
+function normalizeImageUrl(rawUrl) {
+  const trimmedUrl = String(rawUrl ?? "").trim();
+  if (!trimmedUrl) return "";
+
+  try {
+    const parsedUrl = new URL(trimmedUrl);
+    const isGoogleImageRedirect =
+      parsedUrl.hostname.includes("google.") && parsedUrl.pathname === "/imgres";
+
+    if (!isGoogleImageRedirect) return parsedUrl.toString();
+
+    const redirectedImageUrl = parsedUrl.searchParams.get("imgurl");
+    if (!redirectedImageUrl) return parsedUrl.toString();
+
+    return decodeURIComponent(redirectedImageUrl);
+  } catch {
+    return trimmedUrl;
+  }
+}
+
+function getSafeImageUrl(url) {
+  return normalizeImageUrl(url) || "../images/tienda_vyo_85x@2x.avif";
+}
+
 function formatCurrency(value) {
   return new Intl.NumberFormat("es-CO", {
     style: "currency",
@@ -84,10 +108,11 @@ function renderProducts() {
   productContainer.innerHTML = "";
 
   products.forEach((product) => {
+    const imageUrl = getSafeImageUrl(product.imagen);
     const card = document.createElement("article");
     card.className = "venta";
     card.innerHTML = `
-      <img src="${product.imagen}" alt="${product.nombre}">
+      <img src="${imageUrl}" alt="${product.nombre}">
       <h3>${product.nombre}</h3>
       <p><strong>${formatCurrency(product.precio)}</strong></p>
       <ul>
@@ -117,9 +142,10 @@ function renderCartPreview() {
 
   previewBody.innerHTML = "";
   cart.forEach((item) => {
+    const imageUrl = getSafeImageUrl(item.imagen);
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td><img src="${item.imagen}" alt="${item.nombre}" class="thumb"></td>
+      <td><img src="${imageUrl}" alt="${item.nombre}" class="thumb"></td>
       <td>${item.nombre}</td>
       <td>${formatCurrency(item.precio)}</td>
       <td>${item.cantidad}</td>
@@ -165,12 +191,17 @@ articleForm.addEventListener("submit", (event) => {
     id: crypto.randomUUID(),
     nombre: String(formData.get("nombre") ?? "").trim(),
     precio,
-    imagen: String(formData.get("imagen") ?? "").trim(),
+        imagen: normalizeImageUrl(formData.get("imagen")),
     categoria: String(formData.get("categoria") ?? "").trim(),
     talla: String(formData.get("talla") ?? "").trim(),
     material: String(formData.get("material") ?? "").trim(),
   };
 
+   if (!newProduct.imagen) {
+    alert("Agrega una URL de imagen válida.");
+    return;
+  }
+  
   products.push(newProduct);
   renderProducts();
   articleForm.reset();
