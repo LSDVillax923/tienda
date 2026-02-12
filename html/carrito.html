@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de compras</title>
+    <link rel="stylesheet" href="../style/index.css">
+</head>
+<body>
+    <header class="cabeza carrito-header">
+        <div class="brand">
+            <img src="../images/tienda_vyo_85x@2x.avif" alt="Logo principal de la tienda" class="logo-principal">
+            <div>
+                <h1>Carrito de compras</h1>
+                <p>Revisa tus artículos seleccionados.</p>
+            </div>
+        </div>
+        <a href="./index.html" class="volver">← Volver a la tienda</a>
+    </header>
+
+    <main class="carrito-main">
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Categoría</th>
+                    <th>Talla</th>
+                    <th>Material</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody id="cart-page-body"></tbody>
+        </table>
+        <button id="clear-cart-page" type="button">Vaciar carrito</button>
+    </main>
+
+    <script src="../js/carrito.js"></script>
+</body>
+</html>
