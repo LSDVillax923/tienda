@@ -28,13 +28,6 @@ body {
     gap: 12px;
 }
 
-.logo-principal {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
 .brand h1 {
     margin: 0;
     font-size: 1.4rem;
@@ -143,7 +136,8 @@ h2 {
 .venta img {
     width: 100%;
     height: 260px;
-    object-fit: cover;
+    object-fit: contain;
+    background-color: #ececec;
     border-radius: 10px;
 }
 
